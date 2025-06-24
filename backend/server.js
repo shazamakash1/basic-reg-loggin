@@ -7,8 +7,8 @@ import passport from 'passport';
 import MongoStore from 'connect-mongo'; // Import connect-mongo
 
 import connectDB from './db/connect.js';
-import authRoutes from './routes/auth.routes.js';
-import profileRoutes from './routes/profile.routes.js';
+import authRoutes from './routes/auth-routes.js';
+import profileRoutes from './routes/profile-routes.js';
 import './config/passport.js';
 
 import swaggerUi from 'swagger-ui-express';
