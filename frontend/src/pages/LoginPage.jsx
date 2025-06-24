@@ -44,11 +44,11 @@ const LoginPage = () => {
 
                 {/* --- Social Login Buttons --- */}
                 <div className="space-y-3 mb-6">
-                    <a href="http://localhost:5000/api/auth/google" className="w-full flex items-center justify-center bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-50 transition duration-300">
+                    <a href="https://basic-reg-loggin.onrender.com/api/auth/google" className="w-full flex items-center justify-center bg-white border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-gray-50 transition duration-300">
                         <GoogleIcon className="h-5 w-5 mr-2" />
                         Continue with Google
                     </a>
-                     <a href="http://localhost:5000/api/auth/github" className="w-full flex items-center justify-center bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-900 transition duration-300">
+                     <a href="https://basic-reg-loggin.onrender.com/api/auth/github" className="w-full flex items-center justify-center bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-900 transition duration-300">
                         <GithubIcon className="h-5 w-5 mr-2" />
                         Continue with GitHub
                     </a>
