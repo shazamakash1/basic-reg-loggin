@@ -20,7 +20,7 @@ const Header = () => {
     };
 
     return (
-        <header className="bg-white shadow-md">
+        <header className="bg-white shadow-md sticky top-0 z-50">
             <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
@@ -31,8 +31,9 @@ const Header = () => {
                     <div className="flex items-center space-x-4">
                         {userInfo ? (
                             <>
-                                <Link to="/profile" className="text-gray-600 hover:text-indigo-600 font-medium">
-                                    {userInfo.username}
+                                <Link to="/profile" className="flex items-center space-x-2 text-gray-600 hover:text-indigo-600 font-medium">
+                                    <img src={userInfo.avatar} alt="avatar" className="w-8 h-8 rounded-full object-cover" />
+                                    <span>{userInfo.name || userInfo.username}</span>
                                 </Link>
                                 <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg text-sm transition duration-300">
                                     Logout

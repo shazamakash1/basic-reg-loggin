@@ -2,15 +2,15 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 const options = {
   definition: {
-    openapi: '3.0.0', // Specify OpenAPI version
+    openapi: '3.0.0',
     info: {
       title: 'User Authentication API',
       version: '1.0.0',
-      description: 'An Express API for user registration and login, documented with Swagger',
+      description: 'An Express API for user registration, login, and profile management, documented with Swagger',
     },
     servers: [
       {
-        url: 'http://localhost:5000', // Your local development server
+        url: 'http://localhost:5000',
         description: 'Development server',
       },
     ],
@@ -20,15 +20,22 @@ const options = {
                 type: 'http',
                 scheme: 'bearer',
                 bearerFormat: 'JWT',
+                description: "Enter JWT token"
+            },
+             cookieAuth: {
+                type: 'apiKey',
+                in: 'cookie',
+                name: 'jwt',
+                description: 'JWT cookie for authentication'
             }
         }
     },
     security: [{
-        bearerAuth: []
+        cookieAuth: []
     }]
   },
-  // Path to the API docs
-  apis: ['/routes/*.js',], // Path to your API route files
+  // Path to the files containing OpenAPI definitions
+  apis: ['./routes/*.js'],
 };
 
 const specs = swaggerJsdoc(options);

@@ -1,6 +1,13 @@
 import express from 'express';
-import { registerUser, loginUser, logoutUser } from '../controllers/user-controller.js';
+import {
+    registerUser,
+    loginUser,
+    logoutUser,
+    updateUserProfile,
+    updateUserProfilePicture
+} from '../controllers/user-controller.js';
 import { protect } from '../middleware/auth-middleware.js';
+import upload from '../middleware/upload-middleware.js';
 import {
   validate,
   registerValidationRules,
@@ -9,21 +16,22 @@ import {
 
 const router = express.Router();
 
-// Apply validation middleware before the controller
+// Public routes with input validation
 router.post('/register', registerValidationRules(), validate, registerUser);
 router.post('/login', loginValidationRules(), validate, loginUser);
 
-// Add the new logout route
+// Private routes (require authentication via 'protect' middleware)
 router.post('/logout', logoutUser);
 
+router.route('/profile')
+    .get(protect, (req, res) => res.json(req.user)) // GET current user's profile
+    .put(protect, updateUserProfile); // UPDATE current user's profile info
 
-// --- Protected Route ---
-router.get('/profile', protect, (req, res) => {
-  // Because of the `protect` middleware, `req.user` is available here
-  res.status(200).json({
-    message: "Welcome to your profile!",
-    user: req.user
-  });
-});
+router.post(
+    '/profile/avatar',
+    protect,
+    upload.single('avatar'), // 'avatar' is the field name for the file
+    updateUserProfilePicture
+);
 
 export default router;
