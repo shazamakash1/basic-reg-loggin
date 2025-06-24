@@ -24,6 +24,8 @@ const app = express();
 //     credentials: true,
 // }));
 
+app.use(express.static('dist'));
+
 app.use(express.json()); // To accept JSON data in the body
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -37,12 +39,12 @@ app.get('/', (req, res) => {
 app.use('/api/users', userRoutes);
 
 // --- Swagger UI Setup ---
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+if(process.env.NODE_ENV === 'development') {
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+}
+
 
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-    console.log(`Swagger docs available at http://localhost:${PORT}/api-docs`);
-});
+app.listen(PORT);
