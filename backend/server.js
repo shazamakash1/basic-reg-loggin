@@ -2,49 +2,46 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import passport from 'passport';
+
 import connectDB from './db/connect.js';
-import userRoutes from './routes/user-route.js';
+import authRoutes from './routes/auth-routes.js';
+import profileRoutes from './routes/profile-routes.js'; // We'll rename this
+import './config/passport.js'; // This ensures passport config is run
 
-// --- Swagger Imports ---
 import swaggerUi from 'swagger-ui-express';
-import specs from './swagger.js'; // Import the swagger config
+import specs from './swagger.js';
 
-// Load environment variables
-dotenv.config();
-
-// Connect to database
+dotenv.config({path: '../frontend/.env'});
 connectDB();
 
 const app = express();
 
-// Middleware
-// Use cors middleware to allow requests from your frontend
+// app.use(express.static('dist'));
+
 // app.use(cors({
-//     origin: 'http://localhost:3000', // Replace with your frontend's URL in production
+//     origin: 'http://localhost:3000',
 //     credentials: true,
 // }));
-
-app.use(express.static('dist'));
-
-app.use(express.json()); // To accept JSON data in the body
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// --- Session and Passport Middleware ---
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // --- Routes ---
-app.get('/', (req, res) => {
-    res.send('API is running...');
-});
+app.use('/api/auth', authRoutes);
+app.use('/api/users', profileRoutes); // Use new profile routes
 
-app.use('/api/users', userRoutes);
-
-// --- Swagger UI Setup ---
-if(process.env.NODE_ENV === 'development') {
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-}
-
-
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 const PORT = process.env.PORT || 5000;
-
-app.listen(PORT);
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

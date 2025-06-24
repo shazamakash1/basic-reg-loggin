@@ -10,7 +10,9 @@ const Header = () => {
 
     const handleLogout = async () => {
         try {
-            await api.post('/api/users/logout');
+            // ** THE FIX IS HERE **
+            // The logout route was moved to /api/auth on the backend
+            await api.post('/api/auth/logout');
             setUserInfo(null);
             toast.success('Logged out successfully!');
             navigate('/login');

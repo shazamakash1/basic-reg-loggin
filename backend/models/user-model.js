@@ -2,37 +2,43 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
-    username: {
+    // We now use email as the primary unique identifier for local auth
+    email: {
         type: String,
-        required: true,
         unique: true,
+        sparse: true, // Allows multiple documents to have a null value for email
         trim: true,
+        lowercase: true,
     },
     password: {
         type: String,
+        // Password is not required for social logins
+    },
+    // Keep username as an editable field
+    username: {
+        type: String,
+        unique: true,
         required: true,
-    },
-    name: {
-        type: String,
         trim: true,
-        default: ''
     },
-    bio: {
-        type: String,
-        trim: true,
-        default: ''
-    },
+    // Social Login IDs
+    googleId: { type: String },
+    githubId: { type: String },
+
+    // Profile info
+    name: { type: String, trim: true, default: '' },
+    bio: { type: String, trim: true, default: '' },
     avatar: {
-        type: String, // URL to the image from Cloudinary
-        default: 'https://i.pravatar.cc/150' // A default placeholder avatar
+        type: String,
+        default: 'https://i.pravatar.cc/150'
     }
 }, {
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
+    timestamps: true,
 });
 
-// Hash password before saving a new user
+// Hash password only if it's provided and modified
 userSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) {
+    if (!this.isModified('password') || !this.password) {
         return next();
     }
     const salt = await bcrypt.genSalt(10);
@@ -40,7 +46,6 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
-// Method to compare entered password with the hashed password in the database
 userSchema.methods.matchPassword = async function(enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
